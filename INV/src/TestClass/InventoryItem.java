@@ -1,45 +1,117 @@
 package TestClass;
+
+import java.io.Serializable;
+
 /**
  * 
  * @author kingreebes
  *
  */
 
-public abstract class InventoryItem {
-		private String Description;
-		private String ProdNum;
-		private double Price;
+public class InventoryItem implements I_Writer,
+									  Serializable
+{
+		private int prodNum;
+		private String description;
+		private String category;
+		private double wholesalePrice;
+		private double retailPrice;
+		private double profitMargin;
+		private int currentQuantity;
+		private double assetValue;
 		
-		public InventoryItem() {
-			this("null","----", 0.00);
-		}
-		public InventoryItem(String desc, String num, double prc) {
+		/**
+		 * This Constructor is for when we initially create an item in the program.
+		 * @param prod
+		 * @param desc
+		 * @param cat
+		 * @param wholePrice
+		 * @param retailPrice
+		 * @param qty
+		 */
+		public InventoryItem(String desc, String cat, double wholePrice, double retailPrice, int qty) 
+		{
+			setProdNum();
 			setDescription(desc);
-			setNumber(num);
-			setPrice(prc);
+			setWholesalePrice(wholePrice);
+			setRetailPrice(retailPrice);
+			setInitialQuantity(qty);
+			setProfitMargin(wholePrice, retailPrice);
+			setAssetValue(wholePrice, qty);
+		}
+
+		public void setProdNum()
+		{
+			//TODO This needs to check against current values residing in the data files
+			//If a value is already taken, it needs to have a different one.
+		}
+		public void setDescription(String desc)
+		{
+			this.description = desc;
+		}
+		public void setWholesalePrice(double wholePrice) 
+		{
+			if(wholePrice < 0)
+			{
+				this.wholesalePrice = 0.00;
+			} else
+			{
+				this.wholesalePrice = wholePrice;
+			}
+		}
+		public void setRetailPrice(double retail) {
+			if(retail < 0)
+			{
+				this.retailPrice = 0.00;
+			}
+			if(retail < this.wholesalePrice)
+			{
+				this.retailPrice = this.wholesalePrice;
+			} 
+			else
+			{
+				this.retailPrice = retail;
+			}
+		}
+		public void setInitialQuantity(int qty)
+		{
+			this.currentQuantity = qty;
+		}
+		public void setProfitMargin(double whole, double retail)
+		{
+			this.profitMargin = retail / whole;
+		}
+		public void setAssetValue(double whole, int qty)
+		{
+			this.assetValue = whole * qty;
+		}
+		public int getProdNum() 
+		{
+			return this.prodNum;
+		}
+		public String getDescription()
+		{
+			return this.description;
+		}
+		public double getWholesalePrice()
+		{
+			return this.wholesalePrice;
+		}
+		public double getRetailPrice()
+		{
+			return this.retailPrice;
+		}
+		public int getQuantity()
+		{
+			return this.currentQuantity;
+		}
+		public double getProfitMargin()
+		{
+			return this.profitMargin;
+		}
+		public double getAssetValue()
+		{
+			return this.assetValue;
 		}
 		
-		public void setDescription(String desc) {
-			this.Description = desc;
-		}
-		public void setNumber(String num) {
-			this.ProdNum = num;
-		}
-		public void setPrice(double prc) {
-			this.Price = prc;
-		}
-		public String getDescription() {
-			return this.Description;
-		}
-		public String getProdNum() {
-			return this.ProdNum;
-		}
-		public double getPrice() {
-			return this.Price;
-		}
-		public String getSQL() {
-			return "INSERT INTO Inventory " +
-					"(Description, ProdNum, Price) " +
-					"VALUES ('" + this.getDescription() + "', '" + this.getProdNum() + "', " + this.getPrice() + ")";
-		}
 }
