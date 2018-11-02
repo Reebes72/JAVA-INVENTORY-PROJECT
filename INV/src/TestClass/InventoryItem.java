@@ -8,8 +8,7 @@ import java.io.Serializable;
  *
  */
 
-public class InventoryItem implements I_Writer,
-									  Serializable
+public class InventoryItem implements Serializable
 {
 		private int prodNum;
 		private String description;
