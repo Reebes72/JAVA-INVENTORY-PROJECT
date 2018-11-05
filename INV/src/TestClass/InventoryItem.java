@@ -5,11 +5,12 @@ import java.io.Serializable;
 /**
  * 
  * @author kingreebes
- *
+ *Most recent change added a static count variable to increment prodNum with each object creation
  */
 
 public class InventoryItem implements Serializable
 {
+	    static private int count = 1;
 		private int prodNum;
 		private String description;
 		private String category;
@@ -30,8 +31,9 @@ public class InventoryItem implements Serializable
 		 */
 		public InventoryItem(String desc, String cat, double wholePrice, double retailPrice, int qty) 
 		{
-			setProdNum();
+			setProdNum(count);
 			setDescription(desc);
+			setCategory(cat);
 			setWholesalePrice(wholePrice);
 			setRetailPrice(retailPrice);
 			setInitialQuantity(qty);
@@ -39,14 +41,20 @@ public class InventoryItem implements Serializable
 			setAssetValue(wholePrice, qty);
 		}
 
-		public void setProdNum()
+		public void setProdNum(int count)
 		{
+			this.prodNum = count;
+			this.count++;
 			//TODO This needs to check against current values residing in the data files
 			//If a value is already taken, it needs to have a different one.
 		}
 		public void setDescription(String desc)
 		{
 			this.description = desc;
+		}
+		public void setCategory(String cat)
+		{
+			this.category = cat;
 		}
 		public void setWholesalePrice(double wholePrice) 
 		{
@@ -91,6 +99,10 @@ public class InventoryItem implements Serializable
 		public String getDescription()
 		{
 			return this.description;
+		}
+		public String getCategory()
+		{
+			return this.category;
 		}
 		public double getWholesalePrice()
 		{
