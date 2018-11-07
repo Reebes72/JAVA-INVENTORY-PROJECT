@@ -52,5 +52,6 @@ public class window extends JFrame {
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
+		
 	}
 }
