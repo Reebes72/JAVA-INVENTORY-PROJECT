@@ -1,4 +1,6 @@
-import java.awt.EventQueue;
+package TestClass;
+
+import java.awt.*;
 
 import javax.swing.JFrame;
 import java.awt.TextArea;
