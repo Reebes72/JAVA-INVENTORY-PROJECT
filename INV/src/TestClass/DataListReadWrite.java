@@ -37,7 +37,7 @@ public class DataListReadWrite
 			
 		}
 			catch(FileNotFoundException e) {
-				System.out.println("File not found.");
+				System.out.println(e.getMessage());
 				File createFile = new File(this.file);
 			}
 
