@@ -23,6 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import javax.swing.ListSelectionModel;
 
 public class window extends JFrame {
 
@@ -36,12 +39,16 @@ public class window extends JFrame {
 	public static void main(String[] args) {
 		/**
 		 * TODO
-		 * Open up the file and send it to the JTable
+		 * Open up the file and send it to the JTable - DONE
+		 * Button for add quantity?
+		 * Perhaps better to replace the edit button with a series of labeled textFields and a Submit button off to the right?
+		 * Need another Design discussion
 		 * 
 		 */
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+
 					window frame = new window();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -81,7 +88,46 @@ public class window extends JFrame {
 		scrollPane.setBounds(12, 47, 727, 451);
 		contentPane.add(scrollPane);
 		
-		table = new JTable(getTableArray(), getColumnNames());
+		/**
+		 * Create the inventoryItem array and send it an ArrayList
+		 */
+		DataListReadWrite inv = new DataListReadWrite("../INV/src/TestClass/testFile.txt");
+		ArrayList<InventoryItem> arrayList =  inv.getList();
+		table = new JTable(inv.getTableArray(), inv.getColumnNames());
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setRowSelectionAllowed(false);
+		table.setColumnSelectionAllowed(false);
+		table.setCellSelectionEnabled(false);
+		
+		/**
+		 * This is not working as I had hoped. 
+		 * The goal is to be able to change individual cells, but may just have to circumvent that to the edit button
+		 * Actually yes, this is what will be done.
+		 * Will clean this up on next Commit
+		 */
+		table.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				if(table.getSelectedRow() != -1) {
+					Object[] obj = {table.getValueAt(table.getSelectedRow(), 1),
+							table.getValueAt(table.getSelectedRow(), 2),
+							table.getValueAt(table.getSelectedRow(), 3),
+							table.getValueAt(table.getSelectedRow(), 4),
+							table.getValueAt(table.getSelectedRow(), 6),};
+					inv.editListItem(obj, table.getSelectedRow());
+					inv.saveList();
+					try {
+						table = new JTable(inv.getTableArray(), inv.getColumnNames());
+						
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
 		scrollPane.setViewportView(table);
 		
 		JButton NewItemButton = new JButton("New Inventory Item");
@@ -95,7 +141,8 @@ public class window extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							ItemCreate window = new ItemCreate();
+							ItemCreate window = new ItemCreate(inv);
+							//Note the passing of the object
 							window.frmItemCreation.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -110,6 +157,8 @@ public class window extends JFrame {
 		/**
 		 * TODO
 		 * Edit Item button should open up an instance of ItemCreate with the text fields already filled in with current values.
+		 * Create new constructor for ItemCreate that accepts an array containing the values of the selected row.
+		 * The constructor should set the text of the fields to the values currently in the row
 		 */
 		JButton EditItemButton = new JButton("Edit Item");
 		EditItemButton.setToolTipText("Create new inventory item");
@@ -118,10 +167,52 @@ public class window extends JFrame {
 		contentPane.add(EditItemButton);
 		
 	}
+}
+/**
+ * Depreciated Methods 
+ * Moved to DataListReadWrite class
+ * Didn't make sense for them to be here	
+ */
+/*
 	public Object[][] getTableArray() throws FileNotFoundException, IOException
 	{
 		DataListReadWrite inventoryData = new DataListReadWrite("../INV/src/TestClass/testFile.txt");
 		ArrayList<InventoryItem> arrayList =  inventoryData.getList();
+		Object[][] tableData = new Object[arrayList.size()][8];
+		for(int i = 0; i < arrayList.size(); i++) {
+			tableData[i][0] = arrayList.get(i).getProdNum();
+			tableData[i][1] = arrayList.get(i).getDescription();
+			tableData[i][2] = arrayList.get(i).getCategory();
+			tableData[i][3] = arrayList.get(i).getWholesalePrice();
+			tableData[i][4] = arrayList.get(i).getRetailPrice();
+			tableData[i][5] = arrayList.get(i).getProfitMargin();
+			tableData[i][6] = arrayList.get(i).getQuantity();
+			tableData[i][7] = arrayList.get(i).getAssetValue();
+		}
+		return tableData;	
+		
+	}
+	public Object[][] getTableArray(DataListReadWrite inventoryData) throws FileNotFoundException, IOException
+	{
+		ArrayList<InventoryItem> arrayList =  inventoryData.getList();
+		Object[][] tableData = new Object[arrayList.size()][8];
+		for(int i = 0; i < arrayList.size(); i++) {
+			tableData[i][0] = arrayList.get(i).getProdNum();
+			tableData[i][1] = arrayList.get(i).getDescription();
+			tableData[i][2] = arrayList.get(i).getCategory();
+			tableData[i][3] = arrayList.get(i).getWholesalePrice();
+			tableData[i][4] = arrayList.get(i).getRetailPrice();
+			tableData[i][5] = arrayList.get(i).getProfitMargin();
+			tableData[i][6] = arrayList.get(i).getQuantity();
+			tableData[i][7] = arrayList.get(i).getAssetValue();
+		}
+		return tableData;	
+		
+	}
+}
+
+	public Object[][] getTableArray(ArrayList<InventoryItem> arrayList) throws FileNotFoundException, IOException
+	{
 		Object[][] tableData = new Object[arrayList.size()][8];
 		for(int i = 0; i < arrayList.size(); i++) {
 			tableData[i][0] = arrayList.get(i).getProdNum();
@@ -149,4 +240,5 @@ public class window extends JFrame {
 		return colNames;
 		}
 	}
+*/
 
