@@ -21,6 +21,7 @@ public class ItemCreate {
 	private JTextField wholesaleTextField;
 	private JTextField retailTextField;
 	private JTextField quantityTextField;
+	private DataListReadWrite inv;
 
 	/**
 	 * Launch the application.
@@ -40,9 +41,16 @@ public class ItemCreate {
 
 	/**
 	 * Create the application.
+	 * 
+	 * TO-DO
+	 * New constructor here for the Edit Item button
 	 */
 	public ItemCreate() {
 		initialize();
+	}
+	public ItemCreate(DataListReadWrite inv) {
+		initialize();
+		this.inv = inv;
 	}
 
 	/**
@@ -115,13 +123,18 @@ public class ItemCreate {
 			 * Add to the JTable
 			 */
 			public void actionPerformed(ActionEvent e) {
-				InventoryItem item = new InventoryItem(descriptionTextField.getText(), 
-						categoryTextField.getText(), 
-						Double.parseDouble(wholesaleTextField.getText()),
-						Double.parseDouble(retailTextField.getText()),
-						Integer.parseInt(quantityTextField.getText()));
-				
+				try {
+				Object[] item = {descriptionTextField.getText(),
+								categoryTextField.getText(),
+								Double.parseDouble(wholesaleTextField.getText()),
+								Double.parseDouble(retailTextField.getText()),
+								Integer.parseInt(quantityTextField.getText())};
+				inv.updateList(item);
 				clearTextFields();
+				}
+				catch(NullPointerException ex) {
+					System.out.println(ex.getMessage());
+				}
 				
 			}
 		});
@@ -162,13 +175,13 @@ public class ItemCreate {
 		return frame;
 	}
 	/**
-	 * Sets the values of all the text fields to null
+	 * Sets the values of all the text fields to empty Strings
 	 */
 	public void clearTextFields() {
-		descriptionTextField.setText(null);
-		categoryTextField.setText(null);
-		wholesaleTextField.setText(null);
-		retailTextField.setText(null);
-		quantityTextField.setText(null);
+		descriptionTextField.setText("");
+		categoryTextField.setText("");
+		wholesaleTextField.setText("");
+		retailTextField.setText("");
+		quantityTextField.setText("");
 	}
 }
