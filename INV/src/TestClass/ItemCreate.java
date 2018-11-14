@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class ItemCreate {
@@ -22,6 +23,7 @@ public class ItemCreate {
 	private JTextField retailTextField;
 	private JTextField quantityTextField;
 	private DataListReadWrite inv;
+	private int itemExists = -1;
 
 	/**
 	 * Launch the application.
@@ -51,6 +53,20 @@ public class ItemCreate {
 	public ItemCreate(DataListReadWrite inv) {
 		initialize();
 		this.inv = inv;
+	}
+	public ItemCreate(DataListReadWrite inv, int rowNumber) {
+		initialize();
+		this.inv = inv;	
+		ArrayList<InventoryItem> list = inv.getList();
+		this.itemExists = rowNumber;
+	
+		this.descriptionTextField.setText((String)list.get(rowNumber).getDescription());
+		this.categoryTextField.setText((String)list.get(rowNumber).getCategory());
+		this.wholesaleTextField.setText(String.valueOf(list.get(rowNumber).getWholesalePrice()));
+		this.retailTextField.setText(String.valueOf(list.get(rowNumber).getRetailPrice()));
+		this.quantityTextField.setText(Integer.toString(list.get(rowNumber).getQuantity()));
+		
+
 	}
 
 	/**
@@ -129,9 +145,13 @@ public class ItemCreate {
 								Double.parseDouble(wholesaleTextField.getText()),
 								Double.parseDouble(retailTextField.getText()),
 								Integer.parseInt(quantityTextField.getText())};
-				inv.updateList(item);
-				clearTextFields();
-				}
+				if(itemExists != -1) {
+				inv.editListItem(item, getItemExists());
+				} else {
+					inv.updateList(item);
+					clearTextFields();
+					
+				}}
 				catch(NullPointerException ex) {
 					System.out.println(ex.getMessage());
 				}
@@ -183,5 +203,8 @@ public class ItemCreate {
 		wholesaleTextField.setText("");
 		retailTextField.setText("");
 		quantityTextField.setText("");
+	}
+	public int getItemExists() {
+		return this.itemExists;
 	}
 }

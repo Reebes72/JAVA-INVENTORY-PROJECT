@@ -26,6 +26,7 @@ import java.awt.Font;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import javax.swing.ListSelectionModel;
+import javax.swing.Timer;
 
 public class window extends JFrame {
 
@@ -45,6 +46,7 @@ public class window extends JFrame {
 		 * Need another Design discussion
 		 * 
 		 */
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -65,7 +67,7 @@ public class window extends JFrame {
 	public window() throws IOException {
 		setTitle("FabRee Inventory");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 968, 568);
+		setBounds(100, 100, 1092, 747);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -85,7 +87,7 @@ public class window extends JFrame {
 		contentPane.setLayout(null);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 47, 727, 451);
+		scrollPane.setBounds(12, 69, 1068, 623);
 		contentPane.add(scrollPane);
 		
 		/**
@@ -98,36 +100,26 @@ public class window extends JFrame {
 		table.setRowSelectionAllowed(false);
 		table.setColumnSelectionAllowed(false);
 		table.setCellSelectionEnabled(false);
-		
 		/**
-		 * This is not working as I had hoped. 
-		 * The goal is to be able to change individual cells, but may just have to circumvent that to the edit button
-		 * Actually yes, this is what will be done.
-		 * Will clean this up on next Commit
+		 * 
+		 * TODO
+		 * 
+		 * RESELECT CELL AFTER REFRESH
+		 * 
+		 * 
+		 * 
 		 */
-		table.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				if(table.getSelectedRow() != -1) {
-					Object[] obj = {table.getValueAt(table.getSelectedRow(), 1),
-							table.getValueAt(table.getSelectedRow(), 2),
-							table.getValueAt(table.getSelectedRow(), 3),
-							table.getValueAt(table.getSelectedRow(), 4),
-							table.getValueAt(table.getSelectedRow(), 6),};
-					inv.editListItem(obj, table.getSelectedRow());
-					inv.saveList();
-					try {
-						table = new JTable(inv.getTableArray(), inv.getColumnNames());
-						
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-		});
+		Timer  timer=new Timer(10000,new ActionListener(){
+	         public void actionPerformed(ActionEvent e)
+	     {
+	       int row = table.getSelectedRow();
+	        refresh(inv);
+	        
+	     }
+	     });
+	     timer.start();
+		
+		
 		scrollPane.setViewportView(table);
 		
 		JButton NewItemButton = new JButton("New Inventory Item");
@@ -141,9 +133,8 @@ public class window extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							ItemCreate window = new ItemCreate(inv);
-							//Note the passing of the object
-							window.frmItemCreation.setVisible(true);
+							ItemCreate form = new ItemCreate(inv);
+							form.frmItemCreation.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -151,7 +142,7 @@ public class window extends JFrame {
 				});
 			}
 		});
-		NewItemButton.setBounds(751, 47, 205, 41);
+		NewItemButton.setBounds(12, 16, 205, 41);
 		contentPane.add(NewItemButton);
 		
 		/**
@@ -159,13 +150,72 @@ public class window extends JFrame {
 		 * Edit Item button should open up an instance of ItemCreate with the text fields already filled in with current values.
 		 * Create new constructor for ItemCreate that accepts an array containing the values of the selected row.
 		 * The constructor should set the text of the fields to the values currently in the row
+		 * 
+		 * DONE!
 		 */
 		JButton EditItemButton = new JButton("Edit Item");
+		EditItemButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							if(table.getSelectedRow() != -1) {
+							ItemCreate window = new ItemCreate(inv, table.getSelectedRow());
+							//Note the passing of the object
+							window.frmItemCreation.setVisible(true);
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+				
+			}
+		});
 		EditItemButton.setToolTipText("Create new inventory item");
 		EditItemButton.setFont(new Font("Beirut", Font.BOLD, 15));
-		EditItemButton.setBounds(751, 100, 205, 41);
+		EditItemButton.setBounds(294, 16, 205, 41);
 		contentPane.add(EditItemButton);
 		
+		JButton saveButton = new JButton("Save");
+		saveButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				inv.saveList();
+				refresh(inv);
+			}
+		});
+		saveButton.setToolTipText("Create new inventory item");
+		saveButton.setFont(new Font("Beirut", Font.BOLD, 15));
+		saveButton.setBounds(594, 16, 205, 41);
+		contentPane.add(saveButton);
+		
+		JButton deleteButton = new JButton("Delete Item");
+		deleteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(table.getSelectedRow() != -1) {
+				inv.removeItem(table.getSelectedRow());
+				refresh(inv);
+				}}
+		});
+		deleteButton.setToolTipText("Create new inventory item");
+		deleteButton.setFont(new Font("Beirut", Font.BOLD, 15));
+		deleteButton.setBounds(875, 16, 205, 41);
+		contentPane.add(deleteButton);
+		
+	}
+	public void refresh(DataListReadWrite inv) {
+		try {
+			table = new JTable(inv.getTableArray(), inv.getColumnNames());
+			scrollPane.setViewportView(table);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }
 /**
