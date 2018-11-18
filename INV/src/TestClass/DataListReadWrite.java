@@ -17,22 +17,20 @@ public class DataListReadWrite
 	private ArrayList<String> recents = new ArrayList<>();
 	
 	//Default constructor upon program open
-	public DataListReadWrite()  throws IOException {
-		File file = new File("../INV/src/TestClass/recents.ini");
-		DataInputStream in = new DataInputStream(new FileInputStream(file));
-		
-		String line = null;
-		while((line = in.readLine()) != null) {
-			recents.add(0, line);
-		}
-		in.close();
-		setFileName(recents.get(0));
-		populateList();
-		
-		
-	}
 	public DataListReadWrite(String fileName) throws IOException 
 	{
+		if(fileName == null) {
+			File file = new File("../INV/src/TestClass/recents.ini");
+			DataInputStream in = new DataInputStream(new FileInputStream(file));
+			
+			String line = null;
+			while((line = in.readLine()) != null) {
+				recents.add(0, line);
+			}
+			in.close();
+			setFileName(recents.get(0));
+			populateList();
+		}
 		setFileName(fileName);
 		populateList();
 	}
@@ -149,6 +147,16 @@ public class DataListReadWrite
 	
 	public void setFileName(String fileName) {
 		this.file = "../INV/src/TestClass/invFiles/" + fileName;
+	}
+	public String[] getRecents(){
+		String[] array = new String[recents.size()];
+		for(int i = 0; i < array.length; i ++) {
+			array[i] = recents.get(i);
+		}
+		return array;
+	}
+	public String getRecentAt(int index) {
+		return recents.get(index);
 	}
 }
 

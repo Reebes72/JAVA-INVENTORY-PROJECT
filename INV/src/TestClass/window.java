@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import java.awt.Frame;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import javax.swing.ListSelectionModel;
@@ -30,6 +31,13 @@ import javax.swing.Timer;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.JList;
+import java.awt.Choice;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.AbstractListModel;
+import java.awt.Label;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 public class window extends JFrame {
 
@@ -54,7 +62,7 @@ public class window extends JFrame {
 			public void run() {
 				try {
 
-					window frame = new window();
+					window frame = new window(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -67,10 +75,12 @@ public class window extends JFrame {
 	 * Create the frame.
 	 * @throws IOException 
 	 */
-	public window() throws IOException {
+	public window(String fileName) throws IOException {
 		setTitle("FabRee Inventory");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1092, 747);
+		DataListReadWrite inv = new DataListReadWrite(fileName);
+		
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -84,14 +94,36 @@ public class window extends JFrame {
 		JMenuItem mntmOpenFile = new JMenuItem("Open File...");
 		mnFile.add(mntmOpenFile);
 		
-		JMenuItem mntmCloseFile = new JMenuItem("Close File");
-		mnFile.add(mntmCloseFile);
-		
 		JSeparator separator = new JSeparator();
 		mnFile.add(separator);
 		
-		JList list = new JList();
+		Label label = new Label("    Recent Files...");
+		mnFile.add(label);
+		
+		JList list = new JList(inv.getRecents());
+		list.addListSelectionListener(new ListSelectionListener() {
+			/**
+			 * Trying to get this to close the current window and open a new one containing file contents.
+			 * 
+			 * 
+			 * 
+			 */
+			public void valueChanged(ListSelectionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							
+							window frame = new window(inv.getRecentAt(list.getSelectedIndex()));
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}		
+		});
 		mnFile.add(list);
+
 		
 		JMenu mnEdit = new JMenu("Edit");
 		menuBar.add(mnEdit);
@@ -111,8 +143,7 @@ public class window extends JFrame {
 		/**
 		 * Create the inventoryItem array and send it an ArrayList
 		 */
-		DataListReadWrite inv = new DataListReadWrite();
-		ArrayList<InventoryItem> arrayList =  inv.getList();
+
 		table = new JTable(inv.getTableArray(), inv.getColumnNames());
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setRowSelectionAllowed(false);
@@ -224,7 +255,8 @@ public class window extends JFrame {
 		deleteButton.setBounds(875, 16, 205, 41);
 		contentPane.add(deleteButton);
 		
-	}
+			
+	}	
 	public void refresh(DataListReadWrite inv) {
 		try {
 			table = new JTable(inv.getTableArray(), inv.getColumnNames());
