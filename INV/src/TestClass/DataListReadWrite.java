@@ -11,16 +11,32 @@ import java.io.*;
  */
 public class DataListReadWrite
 {
-	private ArrayList<InventoryItem> list;
+	private ArrayList<InventoryItem> list = new ArrayList<>();
 	private String file;
 	private Boolean saved = true;
+	private ArrayList<String> recents = new ArrayList<>();
 	
+	//Default constructor upon program open
+	public DataListReadWrite()  throws IOException {
+		File file = new File("../INV/src/TestClass/recents.ini");
+		DataInputStream in = new DataInputStream(new FileInputStream(file));
+		
+		String line = null;
+		while((line = in.readLine()) != null) {
+			recents.add(0, line);
+		}
+		in.close();
+		setFileName(recents.get(0));
+		populateList();
+		
+		
+	}
 	public DataListReadWrite(String fileName) throws IOException 
 	{
-		this.file = fileName;
-		this.list = new ArrayList<InventoryItem>();
-		this.populateList();
+		setFileName(fileName);
+		populateList();
 	}
+
 
 	public void populateList() throws IOException
 	{
@@ -130,5 +146,9 @@ public class DataListReadWrite
 				"Asset Value"};
 		return colNames;
 		}
+	
+	public void setFileName(String fileName) {
+		this.file = "../INV/src/TestClass/invFiles/" + fileName;
 	}
+}
 

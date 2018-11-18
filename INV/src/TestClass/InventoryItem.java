@@ -37,8 +37,18 @@ public class InventoryItem implements Serializable
 			setWholesalePrice(wholePrice);
 			setRetailPrice(retailPrice);
 			setInitialQuantity(qty);
-			setProfitMargin(wholePrice, retailPrice);
-			setAssetValue(wholePrice, qty);
+			setProfitMargin();
+			setAssetValue();
+		}
+		public InventoryItem() {
+			setProdNum(000);
+			setDescription("Placeholder");
+			setCategory("Text");
+			setWholesalePrice(123);
+			setRetailPrice(456);
+			setInitialQuantity(0);
+			setProfitMargin();
+			setAssetValue();
 		}
 
 		public void setProdNum(int count)
@@ -84,13 +94,13 @@ public class InventoryItem implements Serializable
 		{
 			this.currentQuantity = qty;
 		}
-		public void setProfitMargin(double whole, double retail)
+		public void setProfitMargin()
 		{
-			this.profitMargin = retail / whole;
+			this.profitMargin = this.getRetailPrice() / this.getWholesalePrice() - 1;
 		}
-		public void setAssetValue(double whole, int qty)
+		public void setAssetValue()
 		{
-			this.assetValue = whole * qty;
+			this.assetValue = this.getWholesalePrice() * this.getQuantity();
 		}
 		public int getProdNum() 
 		{

@@ -18,7 +18,7 @@ public class test {
 		InventoryItem five = new InventoryItem("Snickers", "Candy", 0.69, 1.49, 20, 5);
 		
 		try {
-			DataListReadWrite holding = new DataListReadWrite("src/TestClass/testFile.txt");
+			DataListReadWrite holding = new DataListReadWrite("testFile.txt");
 			holding.updateList(one);
 			holding.updateList(two);
 			holding.updateList(three);
