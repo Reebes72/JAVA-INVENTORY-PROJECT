@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 public class InventoryItem implements Serializable
 {
-	    static private int count = 1;
+	    
 		private int prodNum;
 		private String description;
 		private String category;
@@ -29,9 +29,9 @@ public class InventoryItem implements Serializable
 		 * @param retailPrice
 		 * @param qty
 		 */
-		public InventoryItem(String desc, String cat, double wholePrice, double retailPrice, int qty) 
+		public InventoryItem(String desc, String cat, double wholePrice, double retailPrice, int qty, int num) 
 		{
-			setProdNum(count);
+			setProdNum(num);
 			setDescription(desc);
 			setCategory(cat);
 			setWholesalePrice(wholePrice);
@@ -44,7 +44,7 @@ public class InventoryItem implements Serializable
 		public void setProdNum(int count)
 		{
 			this.prodNum = count;
-			this.count++;
+			
 			//TODO This needs to check against current values residing in the data files
 			//If a value is already taken, it needs to have a different one.
 		}

@@ -66,12 +66,12 @@ public class DataListReadWrite
 		this.saved = false;
 	}
 	public void updateList(Object[] array) {
-		this.list.add(new InventoryItem((String)array[0], (String)array[1], (Double)array[2], (Double)array[3], (int)array[4]));
+		this.list.add(new InventoryItem((String)array[0], (String)array[1], (Double)array[2], (Double)array[3], (int)array[4], list.size() + 1));
 		this.saved = false;
 	}
 	public void editListItem(Object[] array, int index) {
 		this.list.remove(index);
-		this.list.add(index, new InventoryItem((String)array[0], (String)array[1], (Double)array[2], (Double)array[3], (int)array[4]));
+		this.list.add(index, new InventoryItem((String)array[0], (String)array[1], (Double)array[2], (Double)array[3], (int)array[4], index + 1));
 		this.list.get(index).setProdNum(index + 1);
 		this.saved = false;
 	}

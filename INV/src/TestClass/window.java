@@ -114,7 +114,9 @@ public class window extends JFrame {
 	     {
 	       int row = table.getSelectedRow();
 	        refresh(inv);
-	        
+	        if(row != -1) {
+	        table.setRowSelectionInterval(row, row);
+	        }
 	     }
 	     });
 	     timer.start();
