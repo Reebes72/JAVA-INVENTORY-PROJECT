@@ -23,10 +23,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import java.awt.Frame;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import javax.swing.ListSelectionModel;
 import javax.swing.Timer;
+import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
+import javax.swing.JList;
+import java.awt.Choice;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.AbstractListModel;
+import java.awt.Label;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 public class window extends JFrame {
 
@@ -51,7 +62,7 @@ public class window extends JFrame {
 			public void run() {
 				try {
 
-					window frame = new window();
+					window frame = new window(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,16 +75,55 @@ public class window extends JFrame {
 	 * Create the frame.
 	 * @throws IOException 
 	 */
-	public window() throws IOException {
+	public window(String fileName) throws IOException {
 		setTitle("FabRee Inventory");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1092, 747);
+		DataListReadWrite inv = new DataListReadWrite(fileName);
+		
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
+		
+		JMenuItem mntmNewFile = new JMenuItem("New File");
+		mnFile.add(mntmNewFile);
+		
+		JMenuItem mntmOpenFile = new JMenuItem("Open File...");
+		mnFile.add(mntmOpenFile);
+		
+		JSeparator separator = new JSeparator();
+		mnFile.add(separator);
+		
+		Label label = new Label("    Recent Files...");
+		mnFile.add(label);
+		
+		JList list = new JList(inv.getRecents());
+		list.addListSelectionListener(new ListSelectionListener() {
+			/**
+			 * Trying to get this to close the current window and open a new one containing file contents.
+			 * 
+			 * 
+			 * 
+			 */
+			public void valueChanged(ListSelectionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							
+							window frame = new window(inv.getRecentAt(list.getSelectedIndex()));
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}		
+		});
+		mnFile.add(list);
+
 		
 		JMenu mnEdit = new JMenu("Edit");
 		menuBar.add(mnEdit);
@@ -93,8 +143,7 @@ public class window extends JFrame {
 		/**
 		 * Create the inventoryItem array and send it an ArrayList
 		 */
-		DataListReadWrite inv = new DataListReadWrite("../INV/src/TestClass/testFile.txt");
-		ArrayList<InventoryItem> arrayList =  inv.getList();
+
 		table = new JTable(inv.getTableArray(), inv.getColumnNames());
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setRowSelectionAllowed(false);
@@ -114,7 +163,9 @@ public class window extends JFrame {
 	     {
 	       int row = table.getSelectedRow();
 	        refresh(inv);
-	        
+	        if(row != -1) {
+	        table.setRowSelectionInterval(row, row);
+	        }
 	     }
 	     });
 	     timer.start();
@@ -172,7 +223,7 @@ public class window extends JFrame {
 				
 			}
 		});
-		EditItemButton.setToolTipText("Create new inventory item");
+		EditItemButton.setToolTipText("Edit selected inventory item");
 		EditItemButton.setFont(new Font("Beirut", Font.BOLD, 15));
 		EditItemButton.setBounds(294, 16, 205, 41);
 		contentPane.add(EditItemButton);
@@ -185,11 +236,12 @@ public class window extends JFrame {
 				refresh(inv);
 			}
 		});
-		saveButton.setToolTipText("Create new inventory item");
+		saveButton.setToolTipText("Save Inventory to file.");
 		saveButton.setFont(new Font("Beirut", Font.BOLD, 15));
 		saveButton.setBounds(594, 16, 205, 41);
 		contentPane.add(saveButton);
 		
+		//Calls removeItem method to get rid of the object in the array
 		JButton deleteButton = new JButton("Delete Item");
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -198,12 +250,13 @@ public class window extends JFrame {
 				refresh(inv);
 				}}
 		});
-		deleteButton.setToolTipText("Create new inventory item");
+		deleteButton.setToolTipText("Delete Item");
 		deleteButton.setFont(new Font("Beirut", Font.BOLD, 15));
 		deleteButton.setBounds(875, 16, 205, 41);
 		contentPane.add(deleteButton);
 		
-	}
+			
+	}	
 	public void refresh(DataListReadWrite inv) {
 		try {
 			table = new JTable(inv.getTableArray(), inv.getColumnNames());
@@ -218,77 +271,5 @@ public class window extends JFrame {
 
 	}
 }
-/**
- * Depreciated Methods 
- * Moved to DataListReadWrite class
- * Didn't make sense for them to be here	
- */
-/*
-	public Object[][] getTableArray() throws FileNotFoundException, IOException
-	{
-		DataListReadWrite inventoryData = new DataListReadWrite("../INV/src/TestClass/testFile.txt");
-		ArrayList<InventoryItem> arrayList =  inventoryData.getList();
-		Object[][] tableData = new Object[arrayList.size()][8];
-		for(int i = 0; i < arrayList.size(); i++) {
-			tableData[i][0] = arrayList.get(i).getProdNum();
-			tableData[i][1] = arrayList.get(i).getDescription();
-			tableData[i][2] = arrayList.get(i).getCategory();
-			tableData[i][3] = arrayList.get(i).getWholesalePrice();
-			tableData[i][4] = arrayList.get(i).getRetailPrice();
-			tableData[i][5] = arrayList.get(i).getProfitMargin();
-			tableData[i][6] = arrayList.get(i).getQuantity();
-			tableData[i][7] = arrayList.get(i).getAssetValue();
-		}
-		return tableData;	
-		
-	}
-	public Object[][] getTableArray(DataListReadWrite inventoryData) throws FileNotFoundException, IOException
-	{
-		ArrayList<InventoryItem> arrayList =  inventoryData.getList();
-		Object[][] tableData = new Object[arrayList.size()][8];
-		for(int i = 0; i < arrayList.size(); i++) {
-			tableData[i][0] = arrayList.get(i).getProdNum();
-			tableData[i][1] = arrayList.get(i).getDescription();
-			tableData[i][2] = arrayList.get(i).getCategory();
-			tableData[i][3] = arrayList.get(i).getWholesalePrice();
-			tableData[i][4] = arrayList.get(i).getRetailPrice();
-			tableData[i][5] = arrayList.get(i).getProfitMargin();
-			tableData[i][6] = arrayList.get(i).getQuantity();
-			tableData[i][7] = arrayList.get(i).getAssetValue();
-		}
-		return tableData;	
-		
-	}
-}
 
-	public Object[][] getTableArray(ArrayList<InventoryItem> arrayList) throws FileNotFoundException, IOException
-	{
-		Object[][] tableData = new Object[arrayList.size()][8];
-		for(int i = 0; i < arrayList.size(); i++) {
-			tableData[i][0] = arrayList.get(i).getProdNum();
-			tableData[i][1] = arrayList.get(i).getDescription();
-			tableData[i][2] = arrayList.get(i).getCategory();
-			tableData[i][3] = arrayList.get(i).getWholesalePrice();
-			tableData[i][4] = arrayList.get(i).getRetailPrice();
-			tableData[i][5] = arrayList.get(i).getProfitMargin();
-			tableData[i][6] = arrayList.get(i).getQuantity();
-			tableData[i][7] = arrayList.get(i).getAssetValue();
-		}
-		return tableData;	
-		
-	}
-	public String[] getColumnNames() {
-		String[] colNames = {
-				"Product Number",
-				"Description",
-				"Category",
-				"Wholesale Price",
-				"Retail Price",
-				"Profit Margin",
-				"Current Quantity",
-				"Asset Value"};
-		return colNames;
-		}
-	}
-*/
 

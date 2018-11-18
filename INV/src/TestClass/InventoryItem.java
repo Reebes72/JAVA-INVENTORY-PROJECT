@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 public class InventoryItem implements Serializable
 {
-	    static private int count = 1;
+	    
 		private int prodNum;
 		private String description;
 		private String category;
@@ -29,22 +29,32 @@ public class InventoryItem implements Serializable
 		 * @param retailPrice
 		 * @param qty
 		 */
-		public InventoryItem(String desc, String cat, double wholePrice, double retailPrice, int qty) 
+		public InventoryItem(String desc, String cat, double wholePrice, double retailPrice, int qty, int num) 
 		{
-			setProdNum(count);
+			setProdNum(num);
 			setDescription(desc);
 			setCategory(cat);
 			setWholesalePrice(wholePrice);
 			setRetailPrice(retailPrice);
 			setInitialQuantity(qty);
-			setProfitMargin(wholePrice, retailPrice);
-			setAssetValue(wholePrice, qty);
+			setProfitMargin();
+			setAssetValue();
+		}
+		public InventoryItem() {
+			setProdNum(000);
+			setDescription("Placeholder");
+			setCategory("Text");
+			setWholesalePrice(123);
+			setRetailPrice(456);
+			setInitialQuantity(0);
+			setProfitMargin();
+			setAssetValue();
 		}
 
 		public void setProdNum(int count)
 		{
 			this.prodNum = count;
-			this.count++;
+			
 			//TODO This needs to check against current values residing in the data files
 			//If a value is already taken, it needs to have a different one.
 		}
@@ -84,13 +94,13 @@ public class InventoryItem implements Serializable
 		{
 			this.currentQuantity = qty;
 		}
-		public void setProfitMargin(double whole, double retail)
+		public void setProfitMargin()
 		{
-			this.profitMargin = retail / whole;
+			this.profitMargin = this.getRetailPrice() / this.getWholesalePrice() - 1;
 		}
-		public void setAssetValue(double whole, int qty)
+		public void setAssetValue()
 		{
-			this.assetValue = whole * qty;
+			this.assetValue = this.getWholesalePrice() * this.getQuantity();
 		}
 		public int getProdNum() 
 		{

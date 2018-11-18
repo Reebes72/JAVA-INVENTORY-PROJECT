@@ -155,6 +155,9 @@ public class ItemCreate {
 				catch(NullPointerException ex) {
 					System.out.println(ex.getMessage());
 				}
+				catch(NumberFormatException ex) {
+					System.out.println(ex.getMessage());
+				}
 				
 			}
 		});

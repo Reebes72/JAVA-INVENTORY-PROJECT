@@ -11,16 +11,30 @@ import java.io.*;
  */
 public class DataListReadWrite
 {
-	private ArrayList<InventoryItem> list;
+	private ArrayList<InventoryItem> list = new ArrayList<>();
 	private String file;
 	private Boolean saved = true;
+	private ArrayList<String> recents = new ArrayList<>();
 	
+	//Default constructor upon program open
 	public DataListReadWrite(String fileName) throws IOException 
 	{
-		this.file = fileName;
-		this.list = new ArrayList<InventoryItem>();
-		this.populateList();
+		if(fileName == null) {
+			File file = new File("../INV/src/TestClass/recents.ini");
+			DataInputStream in = new DataInputStream(new FileInputStream(file));
+			
+			String line = null;
+			while((line = in.readLine()) != null) {
+				recents.add(0, line);
+			}
+			in.close();
+			setFileName(recents.get(0));
+			populateList();
+		}
+		setFileName(fileName);
+		populateList();
 	}
+
 
 	public void populateList() throws IOException
 	{
@@ -66,12 +80,12 @@ public class DataListReadWrite
 		this.saved = false;
 	}
 	public void updateList(Object[] array) {
-		this.list.add(new InventoryItem((String)array[0], (String)array[1], (Double)array[2], (Double)array[3], (int)array[4]));
+		this.list.add(new InventoryItem((String)array[0], (String)array[1], (Double)array[2], (Double)array[3], (int)array[4], list.size() + 1));
 		this.saved = false;
 	}
 	public void editListItem(Object[] array, int index) {
 		this.list.remove(index);
-		this.list.add(index, new InventoryItem((String)array[0], (String)array[1], (Double)array[2], (Double)array[3], (int)array[4]));
+		this.list.add(index, new InventoryItem((String)array[0], (String)array[1], (Double)array[2], (Double)array[3], (int)array[4], index + 1));
 		this.list.get(index).setProdNum(index + 1);
 		this.saved = false;
 	}
@@ -130,5 +144,19 @@ public class DataListReadWrite
 				"Asset Value"};
 		return colNames;
 		}
+	
+	public void setFileName(String fileName) {
+		this.file = "../INV/src/TestClass/invFiles/" + fileName;
 	}
+	public String[] getRecents(){
+		String[] array = new String[recents.size()];
+		for(int i = 0; i < array.length; i ++) {
+			array[i] = recents.get(i);
+		}
+		return array;
+	}
+	public String getRecentAt(int index) {
+		return recents.get(index);
+	}
+}
 
