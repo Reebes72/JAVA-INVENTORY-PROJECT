@@ -62,7 +62,7 @@ public class window extends JFrame {
 			public void run() {
 				try {
 
-					window frame = new window(null);
+					window frame = new window();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -75,11 +75,11 @@ public class window extends JFrame {
 	 * Create the frame.
 	 * @throws IOException 
 	 */
-	public window(String fileName) throws IOException {
+	public window() throws IOException {
 		setTitle("FabRee Inventory");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1092, 747);
-		DataListReadWrite inv = new DataListReadWrite(fileName);
+		setBounds(100, 100, 1092, 523);
+		DataListReadWrite inv = new DataListReadWrite("testFile.txt");
 		
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -109,19 +109,10 @@ public class window extends JFrame {
 			 * 
 			 */
 			public void valueChanged(ListSelectionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							
-							window frame = new window(inv.getRecentAt(list.getSelectedIndex()));
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				});
-			}		
-		});
+				String[] str = inv.getRecents();
+				inv.setFileName(str[list.getSelectedIndex()]);
+					
+		}});
 		mnFile.add(list);
 
 		
@@ -137,7 +128,7 @@ public class window extends JFrame {
 		contentPane.setLayout(null);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 69, 1068, 623);
+		scrollPane.setBounds(12, 69, 1068, 356);
 		contentPane.add(scrollPane);
 		
 		/**

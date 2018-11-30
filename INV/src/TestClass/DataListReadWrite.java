@@ -20,7 +20,7 @@ public class DataListReadWrite
 	public DataListReadWrite(String fileName) throws IOException 
 	{
 		if(fileName == null) {
-			File file = new File("../INV/src/TestClass/recents.ini");
+			File file = new File("recents.ini");
 			DataInputStream in = new DataInputStream(new FileInputStream(file));
 			
 			String line = null;
@@ -146,7 +146,7 @@ public class DataListReadWrite
 		}
 	
 	public void setFileName(String fileName) {
-		this.file = "../INV/src/TestClass/invFiles/" + fileName;
+		this.file = fileName;
 	}
 	public String[] getRecents(){
 		String[] array = new String[recents.size()];
@@ -157,6 +157,23 @@ public class DataListReadWrite
 	}
 	public String getRecentAt(int index) {
 		return recents.get(index);
+	}
+	/**
+	 * Checks for the fileName in the current List
+	 * @param fileName
+	 */
+	public void addRecent(String fileName) {
+		for(int i = 0; i < this.recents.size(); i++) {
+			if(this.recents.get(i).equals(fileName)) {
+				this.recents.remove(i);
+				this.recents.add(fileName);
+				i = this.recents.size();
+			}
+			while(this.recents.size() > 5) {
+				this.recents.remove(5);
+			}
+		}
+		saveList();
 	}
 }
 
