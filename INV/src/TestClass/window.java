@@ -78,7 +78,7 @@ public class window extends JFrame {
 	public window(String fileName) throws IOException {
 		setTitle("FabRee Inventory");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1092, 747);
+		setBounds(100, 100, 1092, 523);
 		DataListReadWrite inv = new DataListReadWrite(fileName);
 		
 		
@@ -109,19 +109,10 @@ public class window extends JFrame {
 			 * 
 			 */
 			public void valueChanged(ListSelectionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							
-							window frame = new window(inv.getRecentAt(list.getSelectedIndex()));
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				});
-			}		
-		});
+				String[] str = inv.getRecents();
+				inv.setFileName(str[list.getSelectedIndex()]);
+					
+		}});
 		mnFile.add(list);
 
 		
@@ -137,7 +128,7 @@ public class window extends JFrame {
 		contentPane.setLayout(null);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 69, 1068, 623);
+		scrollPane.setBounds(12, 69, 1068, 356);
 		contentPane.add(scrollPane);
 		
 		/**

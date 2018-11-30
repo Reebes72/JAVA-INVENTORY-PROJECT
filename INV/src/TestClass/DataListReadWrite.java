@@ -158,5 +158,22 @@ public class DataListReadWrite
 	public String getRecentAt(int index) {
 		return recents.get(index);
 	}
+	/**
+	 * Checks for the fileName in the current List
+	 * @param fileName
+	 */
+	public void addRecent(String fileName) {
+		for(int i = 0; i < this.recents.size(); i++) {
+			if(this.recents.get(i).equals(fileName)) {
+				this.recents.remove(i);
+				this.recents.add(fileName);
+				i = this.recents.size();
+			}
+			while(this.recents.size() > 5) {
+				this.recents.remove(5);
+			}
+		}
+		saveList();
+	}
 }
 
