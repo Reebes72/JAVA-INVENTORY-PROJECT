@@ -62,7 +62,7 @@ public class window extends JFrame {
 			public void run() {
 				try {
 
-					window frame = new window(null);
+					window frame = new window();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -75,11 +75,11 @@ public class window extends JFrame {
 	 * Create the frame.
 	 * @throws IOException 
 	 */
-	public window(String fileName) throws IOException {
+	public window() throws IOException {
 		setTitle("FabRee Inventory");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1092, 523);
-		DataListReadWrite inv = new DataListReadWrite(fileName);
+		DataListReadWrite inv = new DataListReadWrite("testFile.txt");
 		
 		
 		JMenuBar menuBar = new JMenuBar();
