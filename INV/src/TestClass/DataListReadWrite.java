@@ -35,7 +35,11 @@ public class DataListReadWrite
 		populateList();
 	}
 
-
+/**
+ * Opens up an Object stream and sets the ArrayList list equal to what is saved in the file
+ * If it's not found, it creates the file.
+ * @throws IOException
+ */
 	public void populateList() throws IOException
 	{
 		try {
@@ -57,6 +61,9 @@ public class DataListReadWrite
 			}
 
 	}
+	/**
+	 *Write the list to the file
+	 */
 	public void saveList()
 	{
 		try
@@ -75,19 +82,31 @@ public class DataListReadWrite
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Add an InventoryItem to the list and saves it
+	 */
 	public void updateList(InventoryItem item) {
 		this.list.add(item);
-		this.saved = false;
+		saveList();
 	}
+	/**
+	 * Overloaded method taking and Object Array
+	 * @param array
+	 */
 	public void updateList(Object[] array) {
 		this.list.add(new InventoryItem((String)array[0], (String)array[1], (Double)array[2], (Double)array[3], (int)array[4], list.size() + 1));
-		this.saved = false;
+		saveList();
 	}
+	/**
+	 * Edits an existing item in the ArrayList and replaces it with a new InventoryItem object
+	 * @param array
+	 * @param index
+	 */
 	public void editListItem(Object[] array, int index) {
 		this.list.remove(index);
 		this.list.add(index, new InventoryItem((String)array[0], (String)array[1], (Double)array[2], (Double)array[3], (int)array[4], index + 1));
 		this.list.get(index).setProdNum(index + 1);
-		this.saved = false;
+		saveList();
 	}
 	public void appendList(InventoryItem item)
 	{
@@ -107,15 +126,27 @@ public class DataListReadWrite
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Removes an item at the specified index from the ArrayList
+	 * @param index
+	 */
 	public void removeItem(int index)
 	{
 		list.remove(index);
-		this.saved = false;
+		saveList();
 	}
 	
 	public ArrayList<InventoryItem> getList(){
 		return this.list;
 	}
+	/**
+	 * Used to fill in the data in the JTable
+	 * Every row of the array is filled with one index of the list's properties
+	 * String formats are used to get down to 2 decimal places
+	 * @return 2D object array to be put into the JTable
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	public Object[][] getTableArray() throws FileNotFoundException, IOException
 	{
 		Object[][] tableData = new Object[this.list.size()][8];
@@ -123,15 +154,19 @@ public class DataListReadWrite
 			tableData[i][0] = this.list.get(i).getProdNum();
 			tableData[i][1] = this.list.get(i).getDescription();
 			tableData[i][2] = this.list.get(i).getCategory();
-			tableData[i][3] = this.list.get(i).getWholesalePrice();
-			tableData[i][4] = this.list.get(i).getRetailPrice();
-			tableData[i][5] = this.list.get(i).getProfitMargin();
+			tableData[i][3] = String.format("%.2f", this.list.get(i).getWholesalePrice());
+			tableData[i][4] = String.format("%.2f",this.list.get(i).getRetailPrice());
+			tableData[i][5] = String.format("$.2f", this.list.get(i).getProfitMargin());
 			tableData[i][6] = this.list.get(i).getQuantity();
-			tableData[i][7] = this.list.get(i).getAssetValue();
+			tableData[i][7] = String.format("%.2f", this.list.get(i).getAssetValue());
 		}
 		return tableData;	
 		
 	}
+	/**
+	 * Returns a String array for JTable creation
+	 * @return String array for the JTable
+	 */
 	public String[] getColumnNames() {
 		String[] colNames = {
 				"Product Number",
@@ -148,6 +183,12 @@ public class DataListReadWrite
 	public void setFileName(String fileName) {
 		this.file = fileName;
 	}
+	/**
+	 * Returns a String array of the recents.ini file
+	 * Currently not in production
+	 * TODO for file System
+	 * @return
+	 */
 	public String[] getRecents(){
 		String[] array = new String[recents.size()];
 		for(int i = 0; i < array.length; i ++) {
@@ -155,11 +196,22 @@ public class DataListReadWrite
 		}
 		return array;
 	}
+	/**
+	 * returns the index for a specific file name in recents.ini
+	 * Gets the index value from the JList
+	 * Currently not in production
+	 * TODO for file System
+	 * @param index
+	 * @return
+	 */
 	public String getRecentAt(int index) {
 		return recents.get(index);
 	}
 	/**
 	 * Checks for the fileName in the current List
+	 * If it exists, it is removed and moved to the first element in the array
+	 * Currently not in production
+	 * TODO for file System
 	 * @param fileName
 	 */
 	public void addRecent(String fileName) {
