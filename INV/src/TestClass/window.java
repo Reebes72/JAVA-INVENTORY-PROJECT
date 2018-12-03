@@ -79,6 +79,8 @@ public class window extends JFrame {
 		setTitle("FabRee Inventory");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1092, 523);
+		
+		//Creates the working Inventory file
 		DataListReadWrite inv = new DataListReadWrite("testFile.txt");
 		
 		
@@ -105,7 +107,7 @@ public class window extends JFrame {
 			/**
 			 * Trying to get this to close the current window and open a new one containing file contents.
 			 * 
-			 * 
+			 * Will work on after school project
 			 * 
 			 */
 			public void valueChanged(ListSelectionEvent e) {
@@ -144,8 +146,8 @@ public class window extends JFrame {
 		 * 
 		 * TODO
 		 * 
-		 * RESELECT CELL AFTER REFRESH
-		 * 
+		 * RESELECT CELL AFTER REFRESH - done
+		 * Gets the last selected index every 10 seconds and refreshes the JTable
 		 * 
 		 * 
 		 */
@@ -153,7 +155,7 @@ public class window extends JFrame {
 	         public void actionPerformed(ActionEvent e)
 	     {
 	       int row = table.getSelectedRow();
-	        refresh(inv);
+	        refresh(inv); // Call to refresh JTable
 	        if(row != -1) {
 	        table.setRowSelectionInterval(row, row);
 	        }
