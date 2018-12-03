@@ -142,7 +142,7 @@ public class DataListReadWrite
 	/**
 	 * Used to fill in the data in the JTable
 	 * Every row of the array is filled with one index of the list's properties
-	 * 
+	 * String formats are used to get down to 2 decimal places
 	 * @return 2D object array to be put into the JTable
 	 * @throws FileNotFoundException
 	 * @throws IOException
