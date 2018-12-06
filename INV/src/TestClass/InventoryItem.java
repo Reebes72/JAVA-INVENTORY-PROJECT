@@ -40,7 +40,8 @@ public class InventoryItem implements Serializable
 			setProfitMargin();
 			setAssetValue();
 		}
-		public InventoryItem() {
+		public InventoryItem() 
+		{
 			setProdNum(000);
 			setDescription("Placeholder");
 			setCategory("Text");
@@ -96,7 +97,7 @@ public class InventoryItem implements Serializable
 		}
 		public void setProfitMargin()
 		{
-			this.profitMargin = this.getRetailPrice() / this.getWholesalePrice() - 1;
+			this.profitMargin = (this.getRetailPrice() / this.getWholesalePrice() - 1) * 100;
 		}
 		public void setAssetValue()
 		{

@@ -42,23 +42,26 @@ public class DataListReadWrite
  */
 	public void populateList() throws IOException
 	{
-		try {
+		try 
+		{
 			
 			FileInputStream fileIn = new FileInputStream(file);
 			ObjectInputStream objIn = new ObjectInputStream(fileIn);
 			this.list = (ArrayList<InventoryItem>)objIn.readObject();
 			objIn.close();
 			fileIn.close();
-		} catch (ClassNotFoundException e)
+		} 
+		catch (ClassNotFoundException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			
 		}
-			catch(FileNotFoundException e) {
-				System.out.println(e.getMessage());
-				File createFile = new File(this.file);
-			}
+		catch(FileNotFoundException e) 
+		{
+			System.out.println(e.getMessage());
+			File createFile = new File(this.file);
+		}
 
 	}
 	/**
@@ -85,7 +88,8 @@ public class DataListReadWrite
 	/**
 	 * Add an InventoryItem to the list and saves it
 	 */
-	public void updateList(InventoryItem item) {
+	public void updateList(InventoryItem item) 
+	{
 		this.list.add(item);
 		saveList();
 	}
@@ -93,8 +97,14 @@ public class DataListReadWrite
 	 * Overloaded method taking and Object Array
 	 * @param array
 	 */
-	public void updateList(Object[] array) {
-		this.list.add(new InventoryItem((String)array[0], (String)array[1], (Double)array[2], (Double)array[3], (int)array[4], list.size() + 1));
+	public void updateList(Object[] array) 
+	{
+		this.list.add(new InventoryItem((String)array[0], 
+										(String)array[1], 
+										(Double)array[2], 
+										(Double)array[3], 
+										(int)array[4], 
+										list.size() + 1));
 		saveList();
 	}
 	/**
@@ -102,10 +112,19 @@ public class DataListReadWrite
 	 * @param array
 	 * @param index
 	 */
-	public void editListItem(Object[] array, int index) {
+	public void editListItem(Object[] array, int index) 
+	{
 		this.list.remove(index);
-		this.list.add(index, new InventoryItem((String)array[0], (String)array[1], (Double)array[2], (Double)array[3], (int)array[4], index + 1));
-		this.list.get(index).setProdNum(index + 1);
+		this.list.add(index, 
+				new InventoryItem((String)array[0],
+								(String)array[1],
+								(Double)array[2],
+								(Double)array[3],
+								(int)array[4],
+								index + 1));
+		this.list
+			.get(index)
+			.setProdNum(index + 1);
 		saveList();
 	}
 	public void appendList(InventoryItem item)
@@ -136,7 +155,8 @@ public class DataListReadWrite
 		saveList();
 	}
 	
-	public ArrayList<InventoryItem> getList(){
+	public ArrayList<InventoryItem> getList()
+	{
 		return this.list;
 	}
 	/**
@@ -151,14 +171,31 @@ public class DataListReadWrite
 	{
 		Object[][] tableData = new Object[this.list.size()][8];
 		for(int i = 0; i < this.list.size(); i++) {
-			tableData[i][0] = this.list.get(i).getProdNum();
-			tableData[i][1] = this.list.get(i).getDescription();
-			tableData[i][2] = this.list.get(i).getCategory();
-			tableData[i][3] = String.format("%.2f", this.list.get(i).getWholesalePrice());
-			tableData[i][4] = String.format("%.2f",this.list.get(i).getRetailPrice());
-			tableData[i][5] = String.format("$.2f", this.list.get(i).getProfitMargin());
-			tableData[i][6] = this.list.get(i).getQuantity();
-			tableData[i][7] = String.format("%.2f", this.list.get(i).getAssetValue());
+			tableData[i][0] = this.list
+									.get(i)
+									.getProdNum();
+			tableData[i][1] = this.list
+									.get(i)
+									.getDescription();
+			tableData[i][2] = this.list
+									.get(i)
+									.getCategory();
+			tableData[i][3] = String.format("%.2f",
+											this.list.get(i)
+											.getWholesalePrice());
+			tableData[i][4] = String.format("%.2f",
+											this.list.get(i)
+											.getRetailPrice());
+			tableData[i][5] = String.format("%.0f", 
+											this.list.get(i)
+											.getProfitMargin())
+											+ "%";
+			tableData[i][6] = this.list
+									.get(i)
+									.getQuantity();
+			tableData[i][7] = String.format("%.2f", 
+											this.list
+											.get(i).getAssetValue());
 		}
 		return tableData;	
 		
@@ -167,8 +204,10 @@ public class DataListReadWrite
 	 * Returns a String array for JTable creation
 	 * @return String array for the JTable
 	 */
-	public String[] getColumnNames() {
-		String[] colNames = {
+	public String[] getColumnNames()
+	{
+		String[] colNames =
+			{
 				"Product Number",
 				"Description",
 				"Category",
@@ -176,11 +215,13 @@ public class DataListReadWrite
 				"Retail Price",
 				"Profit Margin",
 				"Current Quantity",
-				"Asset Value"};
+				"Asset Value"
+			};
 		return colNames;
-		}
+	}
 	
-	public void setFileName(String fileName) {
+	public void setFileName(String fileName) 
+	{
 		this.file = fileName;
 	}
 	/**
@@ -189,11 +230,15 @@ public class DataListReadWrite
 	 * TODO for file System
 	 * @return
 	 */
-	public String[] getRecents(){
+	public String[] getRecents()
+	{
 		String[] array = new String[recents.size()];
-		for(int i = 0; i < array.length; i ++) {
+		
+		for(int i = 0; i < array.length; i ++) 
+		{
 			array[i] = recents.get(i);
 		}
+		
 		return array;
 	}
 	/**
@@ -204,7 +249,8 @@ public class DataListReadWrite
 	 * @param index
 	 * @return
 	 */
-	public String getRecentAt(int index) {
+	public String getRecentAt(int index) 
+	{
 		return recents.get(index);
 	}
 	/**
@@ -214,14 +260,18 @@ public class DataListReadWrite
 	 * TODO for file System
 	 * @param fileName
 	 */
-	public void addRecent(String fileName) {
-		for(int i = 0; i < this.recents.size(); i++) {
-			if(this.recents.get(i).equals(fileName)) {
+	public void addRecent(String fileName) 
+	{
+		for(int i = 0; i < this.recents.size(); i++) 
+		{
+			if(this.recents.get(i).equals(fileName)) 
+			{
 				this.recents.remove(i);
 				this.recents.add(fileName);
 				i = this.recents.size();
 			}
-			while(this.recents.size() > 5) {
+			while(this.recents.size() > 5) 
+			{
 				this.recents.remove(5);
 			}
 		}
