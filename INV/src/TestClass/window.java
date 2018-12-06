@@ -1,3 +1,27 @@
+/**
+ * Main window for the Inventory program.
+ * Loads up the current inventory file and displays it's contents
+ * 
+ * @author <A HREF="mailto:acreeves72@gmail.com">Andy Reeves</A>
+ * @version 2018-12-05
+ *
+ * @instructions
+ *	Click the new button to bring up the ItemCreate window
+ *	Fill in the details of the Inventory item you would like to add.
+ *	Submitting the inventory item adds it to the inventory list
+ *	Exiting closes the ItemCreate window
+ *
+ *	Selecting an item on the window screen and clicking the edit item button will open up a filled instance of the ItemCreate window
+ *	
+ *	Delete Item will remove the item from the Inventory file
+ *
+ *	
+ *  TODO
+ *		Implement a file system
+ *		GUI item to allow selection of row and change of quantity from main window screen
+ *		
+ **/
+
 package TestClass;
 
 import java.awt.BorderLayout;
@@ -39,32 +63,29 @@ import java.awt.Label;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
-public class window extends JFrame {
-
+public class window extends JFrame 
+{
+	private final String VERSION_ID = "2018-12-05";
 	private JPanel contentPane;
 	private JTable table;
 	private JScrollPane scrollPane;
 
-	/**
+	/*
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		/**
-		 * TODO
-		 * Open up the file and send it to the JTable - DONE
-		 * Button for add quantity?
-		 * Perhaps better to replace the edit button with a series of labeled textFields and a Submit button off to the right?
-		 * Need another Design discussion
-		 * 
-		 */
-
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-
+	public static void main(String[] args) 
+	{
+		EventQueue.invokeLater(new Runnable() 
+		{
+			public void run() 
+			{
+				try 
+				{
 					window frame = new window();
 					frame.setVisible(true);
-				} catch (Exception e) {
+				}
+				catch (Exception e) 
+				{
 					e.printStackTrace();
 				}
 			}
@@ -75,8 +96,9 @@ public class window extends JFrame {
 	 * Create the frame.
 	 * @throws IOException 
 	 */
-	public window() throws IOException {
-		setTitle("FabRee Inventory");
+	public window() throws IOException 
+	{
+		setTitle("Inventory v." + VERSION_ID );
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1092, 523);
 		
@@ -103,18 +125,22 @@ public class window extends JFrame {
 		mnFile.add(label);
 		
 		JList list = new JList(inv.getRecents());
-		list.addListSelectionListener(new ListSelectionListener() {
+		list.addListSelectionListener(new ListSelectionListener() 
+		{
 			/**
 			 * Trying to get this to close the current window and open a new one containing file contents.
 			 * 
 			 * Will work on after school project
 			 * 
 			 */
-			public void valueChanged(ListSelectionEvent e) {
+			public void valueChanged(ListSelectionEvent e) 
+			{
 				String[] str = inv.getRecents();
 				inv.setFileName(str[list.getSelectedIndex()]);
 					
-		}});
+			}
+		}
+		);
 		mnFile.add(list);
 
 		
@@ -142,25 +168,23 @@ public class window extends JFrame {
 		table.setRowSelectionAllowed(false);
 		table.setColumnSelectionAllowed(false);
 		table.setCellSelectionEnabled(false);
+		
 		/**
-		 * 
-		 * TODO
-		 * 
-		 * RESELECT CELL AFTER REFRESH - done
 		 * Gets the last selected index every 10 seconds and refreshes the JTable
-		 * 
-		 * 
 		 */
-		Timer  timer=new Timer(10000,new ActionListener(){
+		Timer timer=new Timer(10000, new ActionListener()
+		{
 	         public void actionPerformed(ActionEvent e)
-	     {
-	       int row = table.getSelectedRow();
-	        refresh(inv); // Call to refresh JTable
-	        if(row != -1) {
-	        table.setRowSelectionInterval(row, row);
-	        }
+	         {
+	        	 int row = table.getSelectedRow();
+	        	 refresh(inv); // Call to refresh JTable
+	        	 if(row != -1) 
+	        	 {
+	        		 table.setRowSelectionInterval(row, row);
+	        	 }
+	         }
 	     }
-	     });
+		);
 	     timer.start();
 		
 		
@@ -173,91 +197,105 @@ public class window extends JFrame {
 			/**
 			 * Creates an Instance of the ItemCreate window
 			 */
-			public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
+			public void actionPerformed(ActionEvent e) 
+			{
+				EventQueue.invokeLater(new Runnable() 
+				{
+					public void run()
+					{
+						try
+						{
 							ItemCreate form = new ItemCreate(inv);
 							form.frmItemCreation.setVisible(true);
-						} catch (Exception e) {
+						} 
+						catch (Exception e)
+						{
 							e.printStackTrace();
 						}
 					}
-				});
+				}
+				);
 			}
-		});
-		NewItemButton.setBounds(12, 16, 205, 41);
+		}
+		);
+		NewItemButton.setBounds(12, 16, 267, 41);
 		contentPane.add(NewItemButton);
-		
-		/**
-		 * TODO
-		 * Edit Item button should open up an instance of ItemCreate with the text fields already filled in with current values.
-		 * Create new constructor for ItemCreate that accepts an array containing the values of the selected row.
-		 * The constructor should set the text of the fields to the values currently in the row
-		 * 
-		 * DONE!
-		 */
+
 		JButton EditItemButton = new JButton("Edit Item");
-		EditItemButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							if(table.getSelectedRow() != -1) {
+		EditItemButton.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				EventQueue.invokeLater(new Runnable() 
+				{
+					public void run() 
+					{
+						try 
+						{
+							if(table.getSelectedRow() != -1) 
+							{
 							ItemCreate window = new ItemCreate(inv, table.getSelectedRow());
-							//Note the passing of the object
 							window.frmItemCreation.setVisible(true);
 							}
-						} catch (Exception e) {
+						}
+						catch (Exception e) 
+						{
 							e.printStackTrace();
 						}
 					}
-				});
+				}
+				);
 				
 			}
-		});
+		}
+		);
+		
 		EditItemButton.setToolTipText("Edit selected inventory item");
 		EditItemButton.setFont(new Font("Beirut", Font.BOLD, 15));
-		EditItemButton.setBounds(294, 16, 205, 41);
+		EditItemButton.setBounds(396, 16, 299, 41);
 		contentPane.add(EditItemButton);
-		
-		JButton saveButton = new JButton("Save");
-		saveButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				inv.saveList();
-				refresh(inv);
-			}
-		});
-		saveButton.setToolTipText("Save Inventory to file.");
-		saveButton.setFont(new Font("Beirut", Font.BOLD, 15));
-		saveButton.setBounds(594, 16, 205, 41);
-		contentPane.add(saveButton);
 		
 		//Calls removeItem method to get rid of the object in the array
 		JButton deleteButton = new JButton("Delete Item");
-		deleteButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(table.getSelectedRow() != -1) {
+		deleteButton.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				if(table.getSelectedRow() != -1) 
+				{
 				inv.removeItem(table.getSelectedRow());
 				refresh(inv);
-				}}
-		});
+				}
+			}
+		}
+		);
+		
 		deleteButton.setToolTipText("Delete Item");
 		deleteButton.setFont(new Font("Beirut", Font.BOLD, 15));
-		deleteButton.setBounds(875, 16, 205, 41);
+		deleteButton.setBounds(813, 16, 267, 41);
 		contentPane.add(deleteButton);
 		
 			
-	}	
-	public void refresh(DataListReadWrite inv) {
-		try {
+	}
+	
+	/**
+	 * Creates a new JTable will the current data in the DataListReadWrite inv file
+	 * @param inv Current DataListReadWrite object
+	 */
+	public void refresh(DataListReadWrite inv) 
+	{
+		try 
+		{
 			table = new JTable(inv.getTableArray(), inv.getColumnNames());
 			scrollPane.setViewportView(table);
-		} catch (FileNotFoundException e) {
+		}
+		catch (FileNotFoundException e) 
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
