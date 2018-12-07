@@ -53,6 +53,7 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.ListSelectionModel;
 import javax.swing.Timer;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.JList;
 import java.awt.Choice;
@@ -62,6 +63,8 @@ import javax.swing.AbstractListModel;
 import java.awt.Label;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class window extends JFrame 
 {
@@ -147,8 +150,22 @@ public class window extends JFrame
 		JMenu mnEdit = new JMenu("Edit");
 		menuBar.add(mnEdit);
 		
-		JMenu mnTodo = new JMenu("todo...");
-		menuBar.add(mnTodo);
+		JMenuItem HelpMenuItem = new JMenuItem("Help");
+		HelpMenuItem.addMouseListener(new MouseAdapter() 
+		{
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				String message = "New Inventory Item:\nBring up window to create a new inventory item."
+						+ "\nSubmit button will save the item to the file."
+						+ "\n\nEdit Item:\nBring up window to edit the selected Inventory Item"
+						+ "\n\nDelete Item:\n Deletes the selected item."
+						+ "\n\nThe Inventory is saved after every item.";
+				JOptionPane.showMessageDialog(HelpMenuItem, 
+						message);
+			}
+		});
+		menuBar.add(HelpMenuItem);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.LIGHT_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
