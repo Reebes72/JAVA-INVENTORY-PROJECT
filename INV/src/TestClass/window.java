@@ -159,7 +159,7 @@ public class window extends JFrame
 				String message = "New Inventory Item:\nBring up window to create a new inventory item."
 						+ "\nSubmit button will save the item to the file."
 						+ "\n\nEdit Item:\nBring up window to edit the selected Inventory Item"
-						+ "\n\nDelete Item:\n Deletes the selected item."
+						+ "\n\nDelete Item:\nDeletes the selected item."
 						+ "\n\nThe Inventory is saved after every item.";
 				JOptionPane.showMessageDialog(HelpMenuItem, 
 						message);
