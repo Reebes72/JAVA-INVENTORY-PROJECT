@@ -6,6 +6,4 @@ IDE: Eclipse
 ### Purpose ###
 This application is used to track, add, and remove inventory.
 
-### Propose Features ###
-- Search 
-- Sort
+
